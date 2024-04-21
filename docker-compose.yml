@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1q2w3e4r!!
+      MYSQL_DATABASE: jpatest
+    restart: always
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - 6399:6379
+    command: redis-server --loglevel warning
+    restart: always
