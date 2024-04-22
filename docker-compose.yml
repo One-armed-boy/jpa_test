@@ -4,10 +4,15 @@ services:
   mysql:
     image: mysql:8.0.33
     ports:
-      - 3306:3306
+      - 33306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: 1q2w3e4r!!
+      MYSQL_ROOT_PASSWORD: 1q2w3e4r@@
       MYSQL_DATABASE: jpatest
+      MYSQL_USER: test-user
+      MYSQL_PASSWORD: 1q2w3e4r@@
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
     restart: always
   redis:
     image: redis:6.2-alpine
