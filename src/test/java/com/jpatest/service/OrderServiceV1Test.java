@@ -14,19 +14,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.jpatest.domain.Member;
 import com.jpatest.domain.ProductV1;
 import com.jpatest.repository.MemberRepository;
-import com.jpatest.repository.OrderRepository;
-import com.jpatest.repository.ProductRepository;
+import com.jpatest.repository.OrderRepositoryV1;
+import com.jpatest.repository.ProductRepositoryV1;
 
 @SpringBootTest
 public class OrderServiceV1Test {
 	@Autowired
 	private OrderServiceV1 orderServiceV1;
 	@Autowired
-	private OrderRepository orderRepository;
+	private OrderRepositoryV1 orderRepositoryV1;
 	@Autowired
 	private MemberRepository memberRepository;
 	@Autowired
-	private ProductRepository productRepository;
+	private ProductRepositoryV1 productRepositoryV1;
 
 	@Test
 	@DisplayName("15개 재고 > 2개씩 8개의 유저(스레드)가 구매 요청 > 7개의 유저가 성공하고 하나의 유저가 실패, 잔여 재고 1")
@@ -37,7 +37,7 @@ public class OrderServiceV1Test {
 		var orderAmountPerUser = 2;
 		var expectedFailCnt = 1;
 
-		var productId = productRepository.save(ProductV1.builder().stock(stockCnt).name("product").build()).getId();
+		var productId = productRepositoryV1.save(ProductV1.builder().stock(stockCnt).name("product").build()).getId();
 		var userNames = new ArrayList<String>();
 		for (var num = 1; num <= userCnt; num++) {
 			userNames.add("name" + num);
@@ -66,8 +66,8 @@ public class OrderServiceV1Test {
 		endLatch.await();
 
 		Assertions.assertThat(failCnt.get()).isEqualTo(expectedFailCnt);
-		Assertions.assertThat(orderRepository.findAll().size()).isEqualTo(userCnt - expectedFailCnt);
-		var product = productRepository.findById(productId).orElseThrow();
+		Assertions.assertThat(orderRepositoryV1.findAll().size()).isEqualTo(userCnt - expectedFailCnt);
+		var product = productRepositoryV1.findById(productId).orElseThrow();
 		Assertions.assertThat(product.getStock()).isEqualTo(stockCnt - (userCnt - expectedFailCnt) * orderAmountPerUser);
 	}
 

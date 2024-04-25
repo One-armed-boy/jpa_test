@@ -11,13 +11,15 @@ spring:
     password: 1q2w3e4r@@
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         generate_statistics: true
-        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 300
+        jdbc.batch_size: 1000
+        order_inserts: true
+        order_updates: true
   data:
     redis:
       host: localhost
@@ -25,10 +27,8 @@ spring:
 
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.SQL_SLOW: INFO
-    org.hibernate.stat: TRACE
     org.springframework.orm: TRACE
     org.springframework.transaction: TRACE

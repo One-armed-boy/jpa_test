@@ -3,8 +3,8 @@ package com.jpatest.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jpatest.domain.ProductV1;
+import com.jpatest.domain.OrderV1;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductV1, Long> {
+public interface OrderRepositoryV1 extends JpaRepository<OrderV1, Long> {
 }
