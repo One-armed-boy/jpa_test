@@ -28,7 +28,7 @@ public class OrderService {
 		this.distributedLockWrapper = distributedLockWrapper;
 	}
 	@Transactional
-	public void purchaseOrder(long memberId, long productId, int amount) {
+	public void purchaseOrderWithDLock(long memberId, long productId, int amount) {
 		distributedLockWrapper.wrapWithLock(String.valueOf(productId), ()->{
 			var product = productRepository.findById(productId).orElseThrow();
 			product.decreaseStock(amount);

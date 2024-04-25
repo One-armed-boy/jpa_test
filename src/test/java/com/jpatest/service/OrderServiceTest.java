@@ -16,7 +16,6 @@ import com.jpatest.domain.Product;
 import com.jpatest.repository.MemberRepository;
 import com.jpatest.repository.OrderRepository;
 import com.jpatest.repository.ProductRepository;
-import com.jpatest.service.OrderService;
 
 @SpringBootTest
 public class OrderServiceTest {
@@ -54,7 +53,7 @@ public class OrderServiceTest {
 			executorService.submit(()->{
 				try {
 					startLatch.await();
-					orderService.purchaseOrder(userIds.get(userIdx), productId, orderAmountPerUser);
+					orderService.purchaseOrderWithDLock(userIds.get(userIdx), productId, orderAmountPerUser);
 				} catch (Exception err) {
 					failCnt.addAndGet(1);
 				} finally {
