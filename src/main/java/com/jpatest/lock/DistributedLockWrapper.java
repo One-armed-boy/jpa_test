@@ -4,30 +4,27 @@ import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
-public class DecreaseProductStockUseCaseWithDLock implements DecreaseProductStockUseCase{
+public class DistributedLockWrapper {
 	private final static long LOCK_WAIT_SECOND = 5;
 	private final static long LOCK_LEASE_SECOND = 3;
-	private RedissonClient redissonClient;
-	private ProductRepository productRepository;
+	private final RedissonClient redissonClient;
 
 	@Autowired
-	public DecreaseProductStockUseCaseWithDLock(RedissonClient redissonClient, ProductRepository productRepository) {
+	public DistributedLockWrapper(RedissonClient redissonClient) {
 		this.redissonClient = redissonClient;
-		this.productRepository = productRepository;
 	}
-	@Override
+
 	@Transactional
-	public void decreaseStock(long productId, int amount) {
-		var lockName = String.valueOf(productId);
+	public <T> T wrapWithLock(String lockName, InnerLockCallback<? extends T> innerLockCallback) {
 		var lock = redissonClient.getLock(lockName);
 		try {
 			log.info("Try D-Lock!!");
@@ -38,14 +35,7 @@ public class DecreaseProductStockUseCaseWithDLock implements DecreaseProductStoc
 				throw new RuntimeException("Concurrency Exception");
 			}
 			log.info("Lock 획득 성공!!");
-			var product = productRepository.findById(productId).orElseThrow();
-
-			if (product.getStock() < amount) {
-				log.error("NotEnoughStock Exception");
-				throw new RuntimeException("NotEnoughStock Exception");
-			}
-
-			product.setStock(product.getStock() - amount);
+			return innerLockCallback.exec();
 		} catch (InterruptedException err) {
 			log.error("Concurrency Exception");
 			throw new RuntimeException("Concurrency Exception");
@@ -58,5 +48,10 @@ public class DecreaseProductStockUseCaseWithDLock implements DecreaseProductStoc
 				}
 			});
 		}
+	}
+
+	@FunctionalInterface
+	public interface InnerLockCallback<T> {
+		T exec();
 	}
 }

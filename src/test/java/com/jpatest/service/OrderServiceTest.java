@@ -1,4 +1,4 @@
-package com.jpatest.lock;
+package com.jpatest.service;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -10,6 +10,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.jpatest.domain.Member;
+import com.jpatest.domain.Product;
+import com.jpatest.repository.MemberRepository;
+import com.jpatest.repository.OrderRepository;
+import com.jpatest.repository.ProductRepository;
+import com.jpatest.service.OrderService;
 
 @SpringBootTest
 public class OrderServiceTest {

@@ -1,4 +1,4 @@
-package com.jpatest.lock;
+package com.jpatest.domain;
 
 import java.util.Date;
 
@@ -19,18 +19,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "member_for_lock")
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Table(name = "products")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class Member {
+public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id", nullable = false, updatable = false)
+	@Column(name = "product_id", nullable = false, updatable = false)
 	private Long id;
 
 	@Column(nullable = false)
-	public String name;
+	private String name;
+
+	@Column(nullable = false)
+	private Integer stock;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
@@ -38,7 +41,15 @@ public class Member {
 	private Date createdAt;
 
 	@Builder
-	public Member(String name) {
+	public Product(String name, int stock) {
 		this.name = name;
+		this.stock = stock;
+	}
+
+	public void decreaseStock(int amount) {
+		if (stock < amount) {
+			throw new RuntimeException("NotEnoughStock Exception");
+		}
+		setStock(stock - amount);
 	}
 }

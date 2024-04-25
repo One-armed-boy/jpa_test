@@ -1,4 +1,4 @@
-package com.jpatest.lock;
+package com.jpatest.domain;
 
 import java.util.Date;
 
@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_for_lock")
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Table(name = "orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 public class Order {

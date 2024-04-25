@@ -1,4 +1,4 @@
-package com.jpatest.lock.config;
+package com.jpatest.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

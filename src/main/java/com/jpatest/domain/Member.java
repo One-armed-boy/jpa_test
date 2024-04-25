@@ -1,4 +1,4 @@
-package com.jpatest.lock;
+package com.jpatest.domain;
 
 import java.util.Date;
 
@@ -19,21 +19,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product_for_lock")
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Table(name = "members")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class Product {
+public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_id", nullable = false, updatable = false)
+	@Column(name = "member_id", nullable = false, updatable = false)
 	private Long id;
 
 	@Column(nullable = false)
-	private String name;
-
-	@Column(nullable = false)
-	private Integer stock;
+	public String name;
 
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
@@ -41,8 +38,7 @@ public class Product {
 	private Date createdAt;
 
 	@Builder
-	public Product(String name, int stock) {
+	public Member(String name) {
 		this.name = name;
-		this.stock = stock;
 	}
 }
