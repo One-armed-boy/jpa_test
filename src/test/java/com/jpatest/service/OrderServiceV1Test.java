@@ -12,15 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.jpatest.domain.Member;
-import com.jpatest.domain.Product;
+import com.jpatest.domain.ProductV1;
 import com.jpatest.repository.MemberRepository;
 import com.jpatest.repository.OrderRepository;
 import com.jpatest.repository.ProductRepository;
 
 @SpringBootTest
-public class OrderServiceTest {
+public class OrderServiceV1Test {
 	@Autowired
-	private OrderService orderService;
+	private OrderServiceV1 orderServiceV1;
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
@@ -37,7 +37,7 @@ public class OrderServiceTest {
 		var orderAmountPerUser = 2;
 		var expectedFailCnt = 1;
 
-		var productId = productRepository.save(Product.builder().stock(stockCnt).name("product").build()).getId();
+		var productId = productRepository.save(ProductV1.builder().stock(stockCnt).name("product").build()).getId();
 		var userNames = new ArrayList<String>();
 		for (var num = 1; num <= userCnt; num++) {
 			userNames.add("name" + num);
@@ -53,7 +53,7 @@ public class OrderServiceTest {
 			executorService.submit(()->{
 				try {
 					startLatch.await();
-					orderService.purchaseOrderWithDLock(userIds.get(userIdx), productId, orderAmountPerUser);
+					orderServiceV1.purchaseOrderWithDLock(userIds.get(userIdx), productId, orderAmountPerUser);
 				} catch (Exception err) {
 					failCnt.addAndGet(1);
 				} finally {
